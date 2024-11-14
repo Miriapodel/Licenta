@@ -1,0 +1,111 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                Int         @id @default(autoincrement())
+  firstName         String      @db.VarChar(50)
+  lastName          String      @db.VarChar(50)
+  email             String      @unique @db.VarChar(100)
+  isClient          Boolean     @default(false)
+  isCarer           Boolean     @default(false)
+  stripeCustomerId  String?     @db.VarChar(100)
+  createdAt         DateTime    @default(now()) @db.Timestamp(0)
+  Address           Address[]
+  Pet               Pet[]
+  Credentials       Credentials[]
+  TransactionAsOwner Transaction[] @relation("UserOwner")
+  TransactionAsCarer Transaction[] @relation("UserCarer")
+  ReviewAsReviewer  Review[]   @relation("ReviewReviewer")
+  ReviewAsReviewee  Review[]   @relation("ReviewReviewee")
+  Availability      Availability[]
+}
+
+model Address {
+  id         Int     @id @default(autoincrement())
+  userId     Int
+  street     String? @db.VarChar(100)
+  number     Int?
+  city       String? @db.VarChar(50)
+  state      String? @db.VarChar(50)
+  country    String? @db.VarChar(50)
+  postalCode String? @db.VarChar(10)
+  location   String  @db.VarChar(50)
+  createdAt  DateTime @default(now()) @db.Timestamp(0)
+  User       User     @relation(fields: [userId], references: [id])
+  Transaction Transaction[]
+}
+
+
+model Pet {
+  id                     Int      @id @default(autoincrement())
+  userId                 Int
+  name                   String   @db.VarChar(50)
+  size                   PetSize
+  requiresSpecialAttention Boolean @default(false)
+  createdAt              DateTime @default(now()) @db.Timestamp(0)
+  User                   User     @relation(fields: [userId], references: [id])
+  Transaction            Transaction[]
+}
+
+enum PetSize {
+  small
+  medium
+  large
+}
+
+model Credentials {
+  id             Int       @id @default(autoincrement())
+  userId         Int
+  provider       String?    @db.VarChar(50)
+  providerUserId String?    @db.VarChar(100)
+  passwordHash   String?    @db.VarChar(255)
+  createdAt      DateTime   @default(now()) @db.Timestamp(0)
+  User           User       @relation(fields: [userId], references: [id])
+}
+
+model Transaction {
+  id             Int       @id @default(autoincrement())
+  petOwnerId     Int
+  carerId        Int
+  petId          Int
+  amount         Decimal    @db.Decimal(10, 2)
+  addressId      Int
+  transactionDate DateTime  @default(now()) @db.Timestamp(0)
+  petOwner       User       @relation("UserOwner", fields: [petOwnerId], references: [id])
+  carer          User       @relation("UserCarer", fields: [carerId], references: [id])
+  pet            Pet        @relation(fields: [petId], references: [id])
+  address        Address    @relation(fields: [addressId], references: [id])
+  Review         Review[]
+}
+
+model Review {
+  id            Int       @id @default(autoincrement())
+  transactionId Int
+  reviewerId    Int
+  revieweeId    Int
+  rating        Int       @db.TinyInt
+  description   String?
+  createdAt     DateTime  @default(now()) @db.Timestamp(0)
+  Transaction   Transaction @relation(fields: [transactionId], references: [id])
+  reviewer      User       @relation("ReviewReviewer", fields: [reviewerId], references: [id])
+  reviewee      User       @relation("ReviewReviewee", fields: [revieweeId], references: [id])
+
+  @@unique([transactionId, reviewerId])
+}
+
+model Availability {
+  id            Int       @id @default(autoincrement())
+  carerId       Int
+  availableFrom DateTime
+  availableUntil DateTime?
+  createdAt     DateTime  @default(now()) @db.Timestamp(0)
+  carer         User      @relation(fields: [carerId], references: [id])
+}
