@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import prisma from '../../../../lib/prisma/prisma';
+import prisma from '../../../../../lib/prisma/prisma';
 
 const googleAuthHandler = async (req: NextApiRequest, res: NextApiResponse) => {
     if(req.method !== "POST")
@@ -17,7 +17,8 @@ const googleAuthHandler = async (req: NextApiRequest, res: NextApiResponse) => {
                 data: {
                     email,
                     firstName,
-                    lastName
+                    lastName,
+                    role: "CLIENT"
                 }
             });
 

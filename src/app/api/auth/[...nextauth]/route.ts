@@ -18,7 +18,7 @@ const authOptions: NextAuthOptions = {
             const providerUserId = account?.id || "";
 
             try {
-                const response = await fetch(`${process.env.NEXTAUTH_URL}/api/auth/googleAuth`, {
+                const response = await fetch(`${process.env.NEXTAUTH_URL}/api/auth/Google/googleAuth`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ email, firstName, lastName, provider, providerUserId }),

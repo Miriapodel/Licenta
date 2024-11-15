@@ -40,7 +40,7 @@ function LoginPage() {
 
   const handleGoogleSignIn = () => {
     if (session) {
-      setOpen(true); // Show modal if the user is already logged in
+      setOpen(true);
     } else {
       signIn('google', { callbackUrl: localStorage.getItem("lastPage") || "/" });
     }
