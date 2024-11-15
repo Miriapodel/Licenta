@@ -63,30 +63,11 @@ const authOptions: NextAuthOptions = {
     ],
     callbacks: {
         async signIn({ user, account }: { user: User; account: Account | null }) {
-            // const email = user?.email;
-            // const name = user?.name || "";
-            // const [firstName, lastName] = name.split(" ");
-            // const providerUserId = account?.id || "";
-
+    
             if (account?.provider === "google")
                 return await handleGoogleSignIn(user, account);
 
             return false;
-
-            // try {
-            //     const response = await fetch(`${process.env.NEXTAUTH_URL}/api/auth/Google/googleAuth`, {
-            //         method: "POST",
-            //         headers: { "Content-Type": "application/json" },
-            //         body: JSON.stringify({ email, firstName, lastName, provider, providerUserId }),
-            //     });
-
-            //     if (!response.ok) return false;
-
-            //     return true;
-            // } catch (error) {
-            //     console.error("Error saving user and credentials to database:", error);
-            //     return false;
-            // }
         },
     },
 };
