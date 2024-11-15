@@ -3,11 +3,10 @@
 import { createTheme } from '@mui/material/styles';
 import { ThemeProvider } from '@mui/material/styles';
 import { SessionProvider } from 'next-auth/react';
-import { useEffect } from 'react';
-import { useRouter } from 'next/router';
+import RouteChangeTracker from '@/helpers/RouteChangeTracker.tsx';
 import "./globals.css";
-import "./metadata.ts";
-import metadata from './metadata.ts';
+import "../metadata/metadata.ts";
+import metadata from '../metadata/metadata.ts';
 
 const theme = createTheme({
   palette: {
@@ -24,21 +23,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
 
-  const router = useRouter();
-
-  useEffect(() => {
-    const handleRouteChange = (url: string) => {
-      if (!url.endsWith("/login") && !url.endsWith("/signup")) {
-        localStorage.setItem("lastPage", url);
-      }
-    };
-    
-    router.events.on("routeChangeComplete", handleRouteChange);
-
-    return () => {
-      router.events.off("routeChangeComplete", handleRouteChange);
-    };
-  }, [router]);
+  
 
   return (
     <html lang="en">
@@ -47,8 +32,9 @@ export default function RootLayout({
       </head>
       <body>
       <ThemeProvider theme={theme}>
-      <SessionProvider>
-        {children}
+        <SessionProvider>
+          <RouteChangeTracker />
+          {children}
         </SessionProvider>
       </ThemeProvider>
       </body>

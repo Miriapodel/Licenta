@@ -1,37 +1,14 @@
 "use client";
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Container, Paper, TextField, Button, Typography, Box, Stack } from '@mui/material';
 import { Pets } from '@mui/icons-material';
-import { useGoogleMaps } from '../contexts/PlacesContext.tsx'; // Import contextul GoogleMaps
 
 function SignupPage() {
-  const { googleLoaded } = useGoogleMaps(); // Accesează starea googleLoaded din context
   const [formValues, setFormValues] = useState({
     firstName: '',
     lastName: '',
     email: '',
-    fullAddress: '',
   });
-  const addressInputRef = useRef(null);
-
-  useEffect(() => {
-    if (googleLoaded && typeof window !== 'undefined' && window.google) {
-      const autocomplete = new window.google.maps.places.Autocomplete(addressInputRef.current, {
-        types: ['address'],
-      });
-
-      autocomplete.addListener("place_changed", () => {
-        const place = autocomplete.getPlace();
-        if (!place.geometry) return;
-
-        const formattedAddress = place.formatted_address;
-        setFormValues((prevValues) => ({
-          ...prevValues,
-          fullAddress: formattedAddress,
-        }));
-      });
-    }
-  }, [googleLoaded]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -83,14 +60,14 @@ function SignupPage() {
               flexDirection: "column",
               alignItems: "center",
               width: "100%",
-              borderRadius: "8px",
-              boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)",
-              backgroundColor: "white",
+              borderRadius: "12px",
+              boxShadow: "0px 8px 24px rgba(0, 0, 0, 0.15)",
+              backgroundColor: "#FFFFFFCC",
             }}
           >
             <Box
               sx={{
-                backgroundColor: "primary.main",
+                backgroundColor: "#009688",
                 width: "70px",
                 height: "70px",
                 borderRadius: "50%",
@@ -106,7 +83,7 @@ function SignupPage() {
               component="h1"
               variant="h4"
               gutterBottom
-              sx={{ fontWeight: "bold", color: "text.primary" }}
+              sx={{ fontWeight: "bold", color: "#333333" }}
             >
               Create Your Account
             </Typography>
@@ -114,83 +91,110 @@ function SignupPage() {
               variant="body2"
               color="text.secondary"
               align="center"
-              sx={{ mb: 3 }}
+              sx={{ mb: 3, color: "#666666" }}
             >
               Join us to find or offer pet care services.
             </Typography>
             <Box
               component="form"
               onSubmit={handleSubmit}
-              sx={{ width: "100%" }}
+              sx={{ width: "100%", mt: 2 }}
             >
-              <Typography variant="h6" gutterBottom>
+              <Typography variant="h6" gutterBottom sx={{ color: "#555555" }}>
                 Personal Information
               </Typography>
-              <Stack spacing={2} direction={{ xs: "column", sm: "row" }}>
+              <Stack spacing={3} sx={{ mt: 2 }}>
                 <TextField
                   required
                   fullWidth
                   label="First Name"
                   name="firstName"
+                  variant="outlined"
                   value={formValues.firstName}
                   onChange={handleChange}
+                  sx={{
+                    "& .MuiOutlinedInput-root": {
+                      "& fieldset": {
+                        borderColor: "#009688",
+                      },
+                      "&:hover fieldset": {
+                        borderColor: "#00796B",
+                      },
+                      "&.Mui-focused fieldset": {
+                        borderColor: "#004D40",
+                      },
+                    },
+                  }}
                 />
                 <TextField
                   required
                   fullWidth
                   label="Last Name"
                   name="lastName"
+                  variant="outlined"
                   value={formValues.lastName}
                   onChange={handleChange}
-                />
-              </Stack>
-              <TextField
-                required
-                fullWidth
-                label="Email Address"
-                name="email"
-                type="email"
-                value={formValues.email}
-                onChange={handleChange}
-                sx={{ mt: 2 }}
-              />
-              <Typography variant="h6" gutterBottom sx={{ mt: 4 }}>
-                Address Information
-              </Typography>
-              <TextField
-                fullWidth
-                label="Address"
-                placeholder="Start typing your address..."
-                name="fullAddress"
-                inputRef={addressInputRef}
-                value={formValues.fullAddress}
-                onChange={handleChange}
-              />
-              <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
-                <Button
-                  type="submit"
-                  fullWidth
-                  variant="outlined"
                   sx={{
-                    color: "primary.main",
-                    borderColor: "primary.main",
-                    fontWeight: "medium",
-                    padding: "10px 0",
-                    transition:
-                      "background-color 0.2s, transform 0.1s, border-color 0.2s",
-                    "&:hover": {
-                      backgroundColor: "rgba(0, 200, 83, 0.1)",
-                      borderColor: "#00b248",
-                    },
-                    "&:active": {
-                      backgroundColor: "rgba(0, 200, 83, 0.2)",
-                      borderColor: "#00a347",
+                    "& .MuiOutlinedInput-root": {
+                      "& fieldset": {
+                        borderColor: "#009688",
+                      },
+                      "&:hover fieldset": {
+                        borderColor: "#00796B",
+                      },
+                      "&.Mui-focused fieldset": {
+                        borderColor: "#004D40",
+                      },
                     },
                   }}
-                >
-                  Sign Up
-                </Button>
-              </Box>
+                />
+                <TextField
+                  required
+                  fullWidth
+                  label="Email Address"
+                  name="email"
+                  type="email"
+                  variant="outlined"
+                  value={formValues.email}
+                  onChange={handleChange}
+                  sx={{
+                    "& .MuiOutlinedInput-root": {
+                      "& fieldset": {
+                        borderColor: "#009688",
+                      },
+                      "&:hover fieldset": {
+                        borderColor: "#00796B",
+                      },
+                      "&.Mui-focused fieldset": {
+                        borderColor: "#004D40",
+                      },
+                    },
+                  }}
+                />
+              </Stack>
+              <Button
+                type="submit"
+                fullWidth
+                variant="outlined"
+                sx={{
+                  mt: 4,
+                  fontWeight: "bold",
+                  padding: "12px 0",
+                  color: "#009688",
+                  borderColor: "#009688",
+                  transition: "background-color 0.3s ease, transform 0.1s",
+                  "&:hover": {
+                    backgroundColor: "rgba(0, 153, 136, 0.1)",
+                    borderColor: "#00796B",
+                  },
+                  "&:active": {
+                    backgroundColor: "rgba(0, 153, 136, 0.2)",
+                    borderColor: "#004D40",
+                  },
+                }}
+              >
+                Sign Up
+              </Button>
             </Box>
           </Paper>
         </Box>

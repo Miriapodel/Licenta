@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { GoogleMapsProvider } from '../contexts/PlacesContext';
+import { GoogleMapsProvider } from '../../contexts/PlacesContext';
 
 interface SingupLayoutProps{
     children: ReactNode

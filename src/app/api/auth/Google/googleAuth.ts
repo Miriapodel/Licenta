@@ -40,8 +40,10 @@ const googleAuthHandler = async (req: NextApiRequest, res: NextApiResponse) => {
                 }
             });
 
-            if(credentials)
+            if(credentials){
+                console.log("PE ASTA INTRA");
                 return res.status(400).json({message: "Acest email este deja asociat unui cont creat cu o alta metoda de autentificare!"});
+            }
         }
 
         return res.status(200).json({message: "Utilizator autentificat cu succes!"});
